@@ -1,27 +1,32 @@
 /*this clock uses 4 15 (5050)pixel quater sements, and a single 12 pixel ring tied to the output of the first set (always second)
-  pin 6 is data to neopixels, 
+  pin 6 is data to neopixels,
   RTC is DS3231 connected to SDA(A4)/SCL(A5) and its power is from the microcontroller
-  the trinket pro was used for this project https://www.adafruit.com/products/2000 
+  the trinket pro was used for this project https://www.adafruit.com/products/2000
   for good information on the DS3231 clock module, see https://learn.adafruit.com/adafruit-ds3231-precision-rtc-breakout/wiring-and-test
   ***additional notes are at the bottom of code***
 */
-#include <Time.h>
+//#include <Time.h>
 #include <util/usa_dst.h> //daylight saving setup
 //#include <TimeLib.h>
 #include <FastLED.h> // neopixel library in use
 #include <Wire.h> //to use the SDA/SCL RTC module
 #include <RTClib.h> // RTC module commands
 
-#define DATA_PIN 6 // the single pin where the neopixel gets their orders from (#6 is most comonly used in most code for neopixels, but you can change this if you need)
+#define DATA_PIN 6 // the single pin where the neopixel gets their orders from 
+//(#6 is most comonly used in most code for neopixels, but you can change this if you need)
+int buttonInc = 9; // increase time hour()
+int buttonDec = 10; // decrease time hour()
+// press both buttons at same time to put clock in time setting mode
 #define NUM_LEDS 72 // how many TOTAL pixels are going to be used here (2 rings of 60px and 12px)
 //pin A5 used on trinket pro for RTC SCL (leave as comment, using for building instructions)
 //pin A4 used on trinket pro for RTC SDA (leave as comment, using for building instructions)
 
-//sets up colours to be used on clock. all HEX based, think 0xRRGGBB 
+//sets up colours to be used on clock. all HEX based, think 0xRRGGBB
+// insert setColor // used to indicate clock is in setup mode, to change time with buttons.
 #define bgColor 0x000000 //its best to keep this as all off for lowest power consumption, or using dim values like white=0x010101
 #define hourColor 0x005500
 #define minColor 0x000055
-#define secColor 0x550000
+#define secColor 0x111111
 
 RTC_DS3231 rtc;
 CRGB pixel[NUM_LEDS]; // sets up array of usable pixels in the programme from the FastLED lib.
@@ -41,26 +46,39 @@ void setup() {
     Serial.println("Couldn't find RTC");
     while (1);
   }
-
+  pinMode(buttonInc, INPUT);
+  pinMode(buttonDec, INPUT);
   if (rtc.lostPower()) {
     Serial.println("RTC lost power, lets set the time!");
     // following line sets the RTC to the date & time this sketch was compiled
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
-   // This line sets the RTC with an explicit date & time, for example to set
+  // This line sets the RTC with an explicit date & time, for example to set
   // November 6, 2014 at 3:35:21 you would call:
-  // rtc.adjust(DateTime(2016, 11, 6, 03, 35, 21));  // rtc.adjust(DateTime(YYYY, M, D, HH, M, S));"
+ //rtc.adjust(DateTime(2018, 01, 27, 22, 59, 15));  // rtc.adjust(DateTime(YYYY, M, D, HH, M, S));"
 
   // the following is used to calabrate the clock
-  // *remeber* final compile and upload of correct time will be needed to fix the time when testing is done. or it will keep restting the time. 
+  // *remeber* final compile and upload of correct time will be needed to fix the time when testing is done. or it will keep restting the time.
   // to make sure the time is recieved only from the RTC, comment out the adjusting code, and reupload
 }
-
+int buttonIncState = 0;
+int buttonDecState = 0;
 void loop() {
   DateTime now = rtc.now();
   int secPix = now.second();
   int minPix = now.minute();
   int hrPix = now.hour() + 60; // pushes the hours out of the min/sec ring, and onto its own 12 pixel ring
+// to detect button press and force adjust clock
+  buttonIncState = digitalRead(buttonInc);
+  if (buttonIncState == HIGH) {
+    rtc.adjust(DateTime(now.year(), now.month(), now.day(), now.hour() + 1, now.minute(), now.second()));
+    delay(500);
+  }
+  buttonDecState = digitalRead(buttonDec);
+  if (buttonDecState == HIGH) {
+    rtc.adjust(DateTime(now.year(), now.month(), now.day(), now.hour() - 1, now.minute(), now.second()));
+    delay(500); pixel[hrPix + 2] = bgColor;
+  }
 
   // set hour pixels -----------------------------------------------------------
   if (now.hour() >= 12) { // adds correction for 24 hour clock time. (24 hour time kept for future projects and easy to correct for)
@@ -89,10 +107,11 @@ void loop() {
     (pixel[minPix]) = (minColor + secColor);
   }
   FastLED.show(); // show me the money (current time with correction now displayed)
+
 }
 
 /*
-  to be sure all pixels show, with corrections, and prevention of overlap issues, make sure to use this order
+  to be sure all pixels show, with corrections, and prevention of overlap issues, make sure to use this order to display
   hour()
   second()
   min()
