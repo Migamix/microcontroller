@@ -5,6 +5,7 @@
   for good information on the DS3231 clock module, see https://learn.adafruit.com/adafruit-ds3231-precision-rtc-breakout/wiring-and-test
   ***additional notes are at the bottom of code***
 */
+
 //#include <Time.h>
 #include <util/usa_dst.h> //daylight saving setup
 //#include <TimeLib.h>
@@ -25,8 +26,9 @@ int buttonDec = 10; // decrease time hour()
 // insert setColor // used to indicate clock is in setup mode, to change time with buttons.
 #define bgColor 0x000000 //its best to keep this as all off for lowest power consumption, or using dim values like white=0x010101
 #define hourColor 0x005500
-#define minColor 0x000055
-#define secColor 0x111111
+#define minColor 0x000055 //dont exceed a half brighness value, since the min/ and sec/ colours get blended when they overlap. 
+#define secColor 0x550000
+#define tixColor 0x050505
 
 RTC_DS3231 rtc;
 CRGB pixel[NUM_LEDS]; // sets up array of usable pixels in the programme from the FastLED lib.
@@ -53,13 +55,18 @@ void setup() {
     // following line sets the RTC to the date & time this sketch was compiled
     rtc.adjust(DateTime(F(__DATE__), F(__TIME__)));
   }
-  // This line sets the RTC with an explicit date & time, for example to set
-  // November 6, 2014 at 3:35:21 you would call:
- //rtc.adjust(DateTime(2018, 01, 27, 22, 59, 15));  // rtc.adjust(DateTime(YYYY, M, D, HH, M, S));"
+   /*the following is used to calabrate the clock
+    remeber* final compile and upload of correct time will be needed to fix the time when testing is done.
+    or it will keep restting the to its last saved time.
+    to make sure the time is recieved only from the RTC, comment out the adjusting code, and reupload,
+    once the clock is set, and a battery is installed, you should not need to do this again.
+    you will even have the ability to adjust the code once the RTC is set
 
-  // the following is used to calabrate the clock
-  // *remeber* final compile and upload of correct time will be needed to fix the time when testing is done. or it will keep restting the time.
-  // to make sure the time is recieved only from the RTC, comment out the adjusting code, and reupload
+    This line sets the RTC with an explicit date & time, for example to set
+    Feb 21, 2018 at 21:07:00 you would call: " rtc.adjust(DateTime(2018, 02, 21, 21, 07, 00)); "
+    rtc.adjust(DateTime(YYYY, M, D, HH, M, S));"
+  */
+  // rtc.adjust(DateTime(2018, 02, 22, 00, 9, 45));
 }
 int buttonIncState = 0;
 int buttonDecState = 0;
@@ -68,7 +75,7 @@ void loop() {
   int secPix = now.second();
   int minPix = now.minute();
   int hrPix = now.hour() + 60; // pushes the hours out of the min/sec ring, and onto its own 12 pixel ring
-// to detect button press and force adjust clock
+  // to detect button press and force adjust clock
   buttonIncState = digitalRead(buttonInc);
   if (buttonIncState == HIGH) {
     rtc.adjust(DateTime(now.year(), now.month(), now.day(), now.hour() + 1, now.minute(), now.second()));
@@ -79,6 +86,7 @@ void loop() {
     rtc.adjust(DateTime(now.year(), now.month(), now.day(), now.hour() - 1, now.minute(), now.second()));
     delay(500); pixel[hrPix + 2] = bgColor;
   }
+  fillTix();
 
   // set hour pixels -----------------------------------------------------------
   if (now.hour() >= 12) { // adds correction for 24 hour clock time. (24 hour time kept for future projects and easy to correct for)
@@ -88,6 +96,7 @@ void loop() {
     pixel[60 + 11] = bgColor;
   }
   pixel[hrPix - 1] = bgColor; // set hour-1 pixel to bgcolor, this causes issues with 60pixel ring if hours are not set first
+  fillTix();
   pixel[hrPix] = hourColor; // set hour pixel on
 
   // set Second pixels -----------------------------------------------------------
@@ -95,17 +104,24 @@ void loop() {
     pixel[59] = bgColor; // sets that pesky #59 to the background color since secPix -1 wont cut it if sec is now 0
   }
   pixel[secPix - 1] = bgColor; // set sec-1 pixel to bgcolor
-  pixel[secPix] = secColor; // set sec pixel on
+
+
 
   // set minute pixels -----------------------------------------------------------
   pixel[minPix - 1] = bgColor; //min-1 pixel to bgcolor
+  fillTix();
+
+  pixel[hrPix] = hourColor; // set hour pixel on
+  pixel[secPix] = secColor; // set sec pixel on
   pixel[minPix] = minColor; // set min pixel on
+
   if (pixel[minPix - 1] == pixel[secPix])  {
     (pixel[minPix - 1]) = secColor; // sets the "second" pixel that is only 1 pixel behind the minute pixel on
   }
   if (pixel[minPix] == pixel[secPix]) {
-    (pixel[minPix]) = (minColor + secColor);
+    (pixel[minPix]) = (minColor + secColor); // combine the min. and sec. colors for extra flair
   }
+
   FastLED.show(); // show me the money (current time with correction now displayed)
 
 }
@@ -117,3 +133,9 @@ void loop() {
   min()
 
 */
+
+// a way to display tick marks at desired intervals, currently every quater of each ring
+void fillTix() {
+  pixel[0] =  tixColor; pixel[15] =  tixColor; pixel[30] =  tixColor; pixel[45] =  tixColor;
+  pixel[60] =  tixColor; pixel[63] =  tixColor; pixel[66] =  tixColor; pixel[69] =  tixColor;
+}
