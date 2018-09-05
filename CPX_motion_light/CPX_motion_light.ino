@@ -33,7 +33,7 @@ void lightsOn() {
 void lightsSB() {
   CircuitPlayground.setBrightness(50);
   for (int x = 0; x < 9; x++) {
-    CircuitPlayground.setPixelColor(x, 0x0000FF);
+    CircuitPlayground.setPixelColor(x, 0x1100FF);
   }
   CircuitPlayground.setPixelColor(9, CircuitPlayground.temperature(), 0, 0); //sets last pixel to red based on TempC
 }
@@ -82,7 +82,7 @@ void loop() {
 
   // will loop a given number of times every 100 ms given by the delay below
   // then jump to the standby lights after that point, begins the loop again
-  if (count == 300) {
+  if (count == 500) {
     lightsSB();
     count = 0;
   }
