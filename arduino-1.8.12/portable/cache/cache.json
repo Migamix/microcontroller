@@ -1,0 +1,55 @@
+{
+  "files" : [ {
+    "remoteURL" : "https://downloads.arduino.cc/libraries/library_index.json.gz",
+    "localPath" : "D:\\_Projects\\GIT\\microcontroller\\arduino-1.8.12\\portable\\cache\\downloads.arduino.cc\\libraries\\library_index.json.gz",
+    "eTag" : "c37389648ab3ed7b53ecaebeb7bb2f65",
+    "md5" : "MD5:c37389648ab3ed7b53ecaebeb7bb2f65",
+    "createdAt" : "2020-06-12T18:48:57.639",
+    "cacheControl" : {
+      "maxAge" : 14400,
+      "mustRevalidate" : false,
+      "noCache" : false,
+      "noStore" : false
+    },
+    "expires" : "2020-06-12T22:48:57.639"
+  }, {
+    "remoteURL" : "https://downloads.arduino.cc/packages/package_index.json.sig",
+    "localPath" : "D:\\_Projects\\GIT\\microcontroller\\arduino-1.8.12\\portable\\cache\\downloads.arduino.cc\\packages\\package_index.json.sig",
+    "eTag" : "9002c67fcd18edca431498fa277437b8",
+    "md5" : "MD5:9002c67fcd18edca431498fa277437b8",
+    "createdAt" : "2020-06-12T18:48:57.231",
+    "cacheControl" : {
+      "maxAge" : 3600,
+      "mustRevalidate" : false,
+      "noCache" : false,
+      "noStore" : false
+    },
+    "expires" : "2020-06-12T19:48:57.231"
+  }, {
+    "remoteURL" : "https://downloads.arduino.cc/libraries/library_index.json.sig",
+    "localPath" : "D:\\_Projects\\GIT\\microcontroller\\arduino-1.8.12\\portable\\cache\\downloads.arduino.cc\\libraries\\library_index.json.sig",
+    "eTag" : "57de933151aef4d452b4b70e79259170",
+    "md5" : "MD5:57de933151aef4d452b4b70e79259170",
+    "createdAt" : "2020-06-12T18:48:57.874",
+    "cacheControl" : {
+      "maxAge" : 14400,
+      "mustRevalidate" : false,
+      "noCache" : false,
+      "noStore" : false
+    },
+    "expires" : "2020-06-12T22:48:57.874"
+  }, {
+    "remoteURL" : "https://downloads.arduino.cc/packages/package_index.json",
+    "localPath" : "D:\\_Projects\\GIT\\microcontroller\\arduino-1.8.12\\portable\\cache\\downloads.arduino.cc\\packages\\package_index.json",
+    "eTag" : "1239f6b728d31a640708170177e62db2",
+    "md5" : "MD5:1239f6b728d31a640708170177e62db2",
+    "createdAt" : "2020-06-12T18:48:57.105",
+    "cacheControl" : {
+      "maxAge" : 3600,
+      "mustRevalidate" : false,
+      "noCache" : false,
+      "noStore" : false
+    },
+    "expires" : "2020-06-12T19:48:57.105"
+  } ]
+}
