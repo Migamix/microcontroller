@@ -3,6 +3,11 @@
         {
             "name": "Win32",
             "includePath": [
+                "C:\\Users\\Migamix\\Documents\\Arduino\\libraries\\RTClib",
+                "C:\\Users\\Migamix\\Documents\\Arduino\\libraries\\Adafruit_RGB_LCD_Shield_Library",
+                "C:\\Users\\Migamix\\Documents\\Arduino\\libraries\\Adafruit_NeoPixel",
+                "C:\\Users\\Migamix\\AppData\\Local\\Arduino15\\packages\\arduino\\tools\\**",
+                "C:\\Users\\Migamix\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.2\\**",
                 "${workspaceFolder}/**"
             ],
             "defines": [
@@ -13,7 +18,10 @@
             "compilerPath": "C:\\Program Files\\LLVM\\bin\\clang.exe",
             "cStandard": "c11",
             "cppStandard": "c++11",
-            "intelliSenseMode": "clang-x64"
+            "intelliSenseMode": "clang-x64",
+            "forcedInclude": [
+                "C:\\Users\\Migamix\\AppData\\Local\\Arduino15\\packages\\arduino\\hardware\\avr\\1.8.2\\cores\\arduino\\Arduino.h"
+            ]
         }
     ],
     "version": 4

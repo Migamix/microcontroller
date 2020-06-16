@@ -65,7 +65,7 @@ void setup() {
   // rtc.adjust(DateTime(2018, 02, 22, 00, 9, 45));  // rtc.adjust(DateTime(YYYY, M, D, HH, M, S));"
 }
 //uint8_t i = 0;
-   setTimeYear();
+   // setTimeYear();
 
     
     delay(1000); lcd.clear();
